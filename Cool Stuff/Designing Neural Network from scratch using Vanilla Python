@@ -1,0 +1,77 @@
+## Description
+
+__- The idea is to design Neural Network from scratch using simple python code.__
+
+__Note: This code doesn't contain any libraries like Tensorflow, Keras or PyTorch__
+
+## Importing necessary Python Libraries
+
+%matplotlib inline
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import optimize
+from ipywidgets import *
+from IPython.display import SVG
+from sklearn import datasets
+sns.set()
+
+## Initialize weight to small random values (+ve or -ve)
+
+w = np.random.randn(3)*1e-4
+
+w
+
+## Activation Function
+
+g = lambda ip, wt: np.where(np.dot(ip, wt)>0, 1, 0)
+
+## Training
+
+def train(inputs, targets, weights, eta, n_iter):
+    # Appending biases to inputs
+    inputs = np.c_[inputs, -np.ones((len(inputs),1))]
+    for n in range(n_iter):
+        # Calling activation function with modifed weights(getting output
+        activations = g(inputs, weights)
+        print(activations)
+        # Updating weights using eta * DOT(inputs, LOSS)
+        weights = weights - (eta*np.dot(np.transpose(inputs), activations-targets))
+        print(weights)
+    # Returning weights
+    return(weights)
+
+## Learning AND gate
+
+AND = pd.DataFrame({'x1':(0,0,1,1), 'x2':(0,1,0,1), 'y':(0,0,0,1)})
+AND
+
+inputs=AND[['x1','x2']]
+target=AND['y']
+w=train(inputs, target, w, 0.25, 10)
+
+## Prediction
+
+# 0 AND 1 = 0
+
+g([0,1,-1],[0.50005193, 0.50007997, 0.74998833])
+
+_______________________________________________________________________
+
+## Learning OR gate
+
+OR = pd.DataFrame({'x1':(0,0,1,1), 'x2':(0,1,0,1), 'y':(0,1,1,1)})
+OR
+
+inputs=OR[['x1','x2']]
+target=OR['y']
+w=train(inputs, target, w, 0.25, 10)
+
+## Prediction
+
+# 0 OR 1 = 1
+
+
+g([0,1,-1], [0.75005193, 0.75007997, 0.24998833])
+
